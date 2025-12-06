@@ -70,6 +70,10 @@ web_modules/
 .env.*
 !.env.example
 
+# SQLite database files (not used in production)
+*.db
+*.db-*
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache

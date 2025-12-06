@@ -1,13 +1,20 @@
 import axios, { AxiosRequestConfig } from 'axios'
-import { getCurrentUserId } from '@/lib/user-context'
 
 const Axios = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_SITE_URL || '',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api',
 })
 
 const getHeaders = () => {
-  const userId = getCurrentUserId()
-  return userId ? { 'x-user-id': userId } : {}
+  if (typeof window !== 'undefined') {
+    const authData = localStorage.getItem('auth-storage')
+    if (authData) {
+      const { state } = JSON.parse(authData)
+      if (state?.token) {
+        return { Authorization: `Bearer ${state.token}` }
+      }
+    }
+  }
+  return {}
 }
 
 const Request = {

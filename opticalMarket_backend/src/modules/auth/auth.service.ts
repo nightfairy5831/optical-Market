@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/co
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { UserRole } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -10,17 +11,24 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(data: { email: string; password: string; name: string }) {
+  async register(data: { email: string; password: string; name: string; role?: string }) {
     const existing = await this.prisma.user.findUnique({ where: { email: data.email } });
     if (existing) {
       throw new ConflictException('Email already registered');
     }
+
+    // Only allow CUSTOMER or SELLER roles during registration
+    const allowedRoles: UserRole[] = [UserRole.CUSTOMER, UserRole.SELLER];
+    const userRole: UserRole = data.role && allowedRoles.includes(data.role as UserRole)
+      ? (data.role as UserRole)
+      : UserRole.CUSTOMER;
 
     const user = await this.prisma.user.create({
       data: {
         email: data.email,
         password: await bcrypt.hash(data.password, 10),
         name: data.name,
+        role: userRole,
       },
     });
 

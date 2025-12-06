@@ -8,7 +8,11 @@
     "dev": "nest start --watch",
     "start:prod": "node dist/main",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "seed": "node src/database/seed.js"
+  },
+  "prisma": {
+    "seed": "node src/database/seed.js"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

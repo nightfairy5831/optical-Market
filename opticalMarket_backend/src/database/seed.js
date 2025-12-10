@@ -20,22 +20,6 @@ async function main() {
 
   console.log('Admin user created:', admin.email);
 
-  // Create test customer user
-  const customerPassword = await bcrypt.hash('test123', 10);
-  const customer = await prisma.user.upsert({
-    where: { email: 'test@example.com' },
-    update: {},
-    create: {
-      email: 'test@example.com',
-      password: customerPassword,
-      name: 'Test User',
-      role: 'CUSTOMER',
-      status: 'ACTIVE',
-    },
-  });
-
-  console.log('Customer user created:', customer.email);
-
   // Create a sample category
   const category = await prisma.category.upsert({
     where: { slug: 'sunglasses' },

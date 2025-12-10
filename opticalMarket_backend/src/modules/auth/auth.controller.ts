@@ -1,5 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsString, MinLength, IsEnum, IsOptional } from 'class-validator';
 import { AuthService } from './auth.service';
 
 export class RegisterDto {
@@ -13,6 +13,10 @@ export class RegisterDto {
   @IsString()
   @MinLength(2)
   name: string;
+
+  @IsEnum(['CUSTOMER', 'SELLER'])
+  @IsOptional()
+  role?: string;
 }
 
 export class LoginDto {

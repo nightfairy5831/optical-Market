@@ -81,3 +81,13 @@ enum OrderStatus {
   DELIVERED
   CANCELLED
 }
+
+model BlingToken {
+  id           String   @id @default(uuid())
+  accessToken  String   @db.Text
+  refreshToken String   @db.Text
+  expiresAt    DateTime
+  scope        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

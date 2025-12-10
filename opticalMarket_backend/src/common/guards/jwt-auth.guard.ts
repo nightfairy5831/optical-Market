@@ -13,12 +13,16 @@ export class JwtAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const authHeader = request.headers.authorization;
 
+    console.log('JWT Guard - Auth header:', authHeader ? 'EXISTS' : 'MISSING');
+
     if (!authHeader) {
+      console.log('JWT Guard - Error: No authorization header');
       throw new UnauthorizedException('No authorization header');
     }
 
     const [type, token] = authHeader.split(' ');
     if (type !== 'Bearer' || !token) {
+      console.log('JWT Guard - Error: Invalid format, type:', type);
       throw new UnauthorizedException('Invalid authorization format');
     }
 
@@ -26,9 +30,11 @@ export class JwtAuthGuard implements CanActivate {
       const payload = this.jwtService.verify(token, {
         secret: this.config.get('JWT_SECRET'),
       });
+      console.log('JWT Guard - Success, user:', payload.email || payload.sub);
       request.user = payload;
       return true;
-    } catch {
+    } catch (error) {
+      console.log('JWT Guard - Error: Invalid token', error.message);
       throw new UnauthorizedException('Invalid token');
     }
   }

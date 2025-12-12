@@ -5,8 +5,14 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Allow multiple origins (localhost + production frontend)
+  const allowedOrigins = [
+    'http://localhost:8080',
+    process.env.FRONTEND_URL || 'https://optical-market-frontend.vercel.app',
+  ].filter(Boolean);
+
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:8080',
+    origin: allowedOrigins,
     credentials: true,
   });
 
